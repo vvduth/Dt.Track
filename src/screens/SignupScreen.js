@@ -6,9 +6,11 @@ import { Context as AuthContext} from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 
 const SingupScreen = ({navigation}) => {
-    const {state, signup, clearErrorMessage} = useContext(AuthContext);
+    const {state, signup, clearErrorMessage, tryLocalSignin} = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+   
 
     //console.log(state);
 
