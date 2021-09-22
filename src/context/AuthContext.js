@@ -10,9 +10,18 @@ const authReducer = (state, action) => {
             return {...state, errorMessage: action.payload};
         case 'signup':
             return {errorMessage: '', token: action.payload};
+        case 'signin':
+            return {errorMessage: '', token: action.payload};
+        case 'clear_error_message':
+            return {...state, errorMessage: ''};
         default:
             return state ;
     }
+};
+
+const clearErrorMessage = dispatch => () => {
+    
+    dispatch({type: 'clear_error_message'});
 };
 
 //state === {"error messeage: "error" ", "isSingedIn": false} when some error
@@ -41,10 +50,20 @@ const  signup = (dispatch) => {
 }
 
 const signin = (dispatch) => {
-    return ({email,password}) => {
+    return async ({email,password}) => {
         //try to sign in
         //handle success by updating the state
         // handle failure by showing the err message
+        
+        try {
+            const response = await trackerApi.post('signin',{email,password});
+            await AsyncStorage.setItem('token', response.data.token);
+            dispatch({type:'signin',payload: response.data.token});
+            navigate('TrackList');
+        } catch (err) {
+            console.log(err);
+            dispatch({type: 'add_error', payload: 'Something went wrong with sign in' });
+        }
 
     };
 }
@@ -60,7 +79,7 @@ const signout = (dispatch) => {
 
 export const {Provider, Context} = createDataContext(
     authReducer,
-    {signin,signout,signup},
+    {signin,signout,signup, clearErrorMessage},
     {token: null, errorMessage: ''}
 );
 

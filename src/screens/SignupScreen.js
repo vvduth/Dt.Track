@@ -1,12 +1,12 @@
 import React,{useState, useContext} from "react";
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, Input, Button} from 'react-native-elements';
-import Spacer from "../components/Spacer";
+import {View, StyleSheet} from 'react-native';
+import { NavigationEvents } from "react-navigation";
+import NavLink from "../components/NavLink";
 import { Context as AuthContext} from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 
 const SingupScreen = ({navigation}) => {
-    const {state, signup} = useContext(AuthContext);
+    const {state, signup, clearErrorMessage} = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -15,6 +15,7 @@ const SingupScreen = ({navigation}) => {
     return (
     <View style = {styles.container}>
 
+        <NavigationEvents onWillBlur = {clearErrorMessage}/>
         <AuthForm 
             headerText="Sign Up for Dt.Track"
             errorMessage={state.errorMessage}
@@ -22,12 +23,13 @@ const SingupScreen = ({navigation}) => {
             //onSubmit={({email,password}) => signup({email,password})}
             onSubmit = {signup} //dont need to pass parm cuz it already declared upper
         />
+
+        <NavLink
+            routeName="Signin"
+            text = "Already have an account? Sign in instead"
+        />
         
-        <TouchableOpacity onPress = {() =>   navigation.navigate('Signin')}>
-            <Spacer>
-                <Text style = {styles.link}>Already have an account? Sign in instead</Text>
-            </Spacer>
-        </TouchableOpacity>
+        
     </View>
     );
 };
@@ -49,9 +51,7 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginTop: 15
     },
-    link: {
-        color: 'blue',
-    }
+  
 });
 
 export default SingupScreen ;
