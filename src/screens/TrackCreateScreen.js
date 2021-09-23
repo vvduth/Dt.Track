@@ -10,9 +10,11 @@ import useLocation from "../hooks/useLocation";
 import {  withNavigationFocus } from "react-navigation";
 import TrackForm from "../components/TrackForm";
 const TrackCreateScreen = ({isFocused}) => {
-    const {addLocation} = useContext(LocationContext);
+    const {state,addLocation} = useContext(LocationContext);
     
-    const [err] = useLocation(isFocused, addLocation);
+    const [err] = useLocation(isFocused, (location) => {
+            addLocation(location, state.recording);
+    });
     //is focued is a boolean
     console.log(isFocused)
 
